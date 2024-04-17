@@ -10,7 +10,9 @@ import localFont from "next/font/local";
 
 const render = async ({ text, font }: { text: string; font: string }) => {
   const svgText = `    <svg xmlns="http://www.w3.org/2000/svg" width="180" height="80">
-
+  <style>
+  font-family:"Mukta"
+  </style>
 
 
 <text
@@ -20,7 +22,8 @@ const render = async ({ text, font }: { text: string; font: string }) => {
   font-family="Bihani"
   fill="black"
 >
-Shayari Page
+शायरी पेज Hello
+
 </text>
 </svg>`;
 
@@ -38,6 +41,8 @@ Shayari Page
 };
 
 const page = async () => {
+  console.log(process.env.FONTCONFIG_PATH, "fsdaaaaa");
+  console.log("hello");
   const buffer = await render({
     text: " शायरी पेज",
     font: "/home/saurabh/Documents/github/sharp/public/font/S07030F2.TTF",
