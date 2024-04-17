@@ -1,0 +1,85 @@
+import Image from "next/image";
+import React from "react";
+import sharp from "sharp";
+import fs from "fs";
+import path from "path";
+
+// Font files can be colocated inside of `pages`
+
+const render = async ({ text, font }: { text: string; font: string }) => {
+  const svgText = `    <svg xmlns="http://www.w3.org/2000/svg" width="180" height="80">
+  <style>
+  @font-face {
+    font-family: 'Shree Dev7 4908';
+    src: url('/home/saurabh/Documents/github/sharp/public/font/SHREE-DEV7-4908 Regular.ttf');
+  }
+</style>
+<text
+  x="10"
+  y="50"
+  font-family="Shree Dev7 4908"  font-size="32"
+  fill="black"
+>
+  शायरी पेज
+</text>
+</svg>`;
+
+  console.log(svgText);
+
+  const svgBuffer = Buffer.from(svgText);
+  try {
+    const pngBuffer = await sharp(svgBuffer).png().toBuffer();
+    // Convert PNG buffer to base64 string
+    const pngBase64 = pngBuffer.toString("base64");
+    // Return the PNG base64 string
+    return pngBase64;
+  } catch (error) {
+    console.error("Error processing SVG:", error);
+    return null;
+  }
+};
+
+const page = async () => {
+  const buffer = await render({
+    text: "",
+    font: "/home/saurabh/Documents/github/sharp/public/font/S07030F2.TTF",
+  });
+
+  const getFonts = () => {
+    const fontsDir = path.join(process.cwd(), "public/font");
+    try {
+      const fonts = fs.readdirSync(fontsDir);
+      return fonts;
+    } catch (error) {
+      console.error("Error reading fonts directory:", error);
+      return [];
+    }
+  };
+
+  const allBuffers = await Promise.all(
+    getFonts().map(async (font) => {
+      console.log(font);
+      return await render({ text: "", font: font });
+    })
+  );
+
+  console.log(buffer);
+  const pngDataURL = `data:image/png;base64,${buffer}`;
+  // Render the PNG image
+  return (
+    <div>
+      {allBuffers.map((imgBuffer, index) => (
+        <Image
+          key={index}
+          alt=""
+          src={`data:image/png;base64,${imgBuffer}`}
+          width={180}
+          height={80}
+        />
+      ))}
+      <Image src={pngDataURL} alt="SVG to PNG" width={180} height={80} />
+    </div>
+  );
+};
+
+export default page;
