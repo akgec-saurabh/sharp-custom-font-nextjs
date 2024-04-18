@@ -1,58 +1,19 @@
-import Image from "next/image";
 import React from "react";
-import sharp from "sharp";
-import fs from "fs";
-import path from "path";
+import Sharp from "./components/sharp";
+import Svg from "./components/svg";
+import Resize from "./components/resize";
+import Random from "./components/random";
 
-import localFont from "next/font/local";
-
-// Font files can be colocated inside of `pages`
-
-const render = async ({ text, font }: { text: string; font: string }) => {
-  const svgText = `    <svg xmlns="http://www.w3.org/2000/svg" width="180" height="80">
-  <style>
-  font-family:"Mukta"
-  </style>
-
-
-<text
-  x="10"
-  y="50"
-  font-size="32"
-  font-family="Bihani"
-  fill="black"
->
-शायरी पेज Hello
-
-</text>
-</svg>`;
-
-  console.log(svgText);
-
-  const svgBuffer = Buffer.from(svgText);
-  try {
-    const pngBuffer = await sharp(svgBuffer).png().toBuffer();
-    const pngBase64 = pngBuffer.toString("base64");
-    return pngBase64;
-  } catch (error) {
-    console.error("Error processing SVG:", error);
-    return null;
-  }
-};
-
-const page = async () => {
-  console.log(process.env.FONTCONFIG_PATH, "fsdaaaaa");
-  console.log("hello");
-  const buffer = await render({
-    text: " शायरी पेज",
-    font: "/home/saurabh/Documents/github/sharp/public/font/S07030F2.TTF",
-  });
-
-  console.log(buffer);
-  const pngDataURL = `data:image/png;base64,${buffer}`;
+const page = () => {
   return (
-    <div>
-      <Image src={pngDataURL} alt="SVG to PNG" width={180} height={80} />
+    <div className="flex flex-wrap">
+      <Random />
+      {/* <Resize imgPath="public/photo.jpg" overlayPath="public/sign.svg" /> */}
+      {/* <Resize imgPath="public/a.jpg" overlayPath="public/sign.svg" /> */}
+      {/* <Resize imgPath="public/02.png" overlayPath="public/sign.svg" /> */}
+      {/* <Resize imgPath="public/pxfuel.jpg" overlayPath="public/sign.svg" /> */}
+      {/* <Svg /> */}
+      {/* <Sharp /> */}
     </div>
   );
 };
